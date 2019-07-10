@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import apiRequest from '../../utils/apiRequest';
+import Form from '../_styles/Form';
 
 const UrlShortener = () => {
     const [userInput, updateUserInput] = useState('');
@@ -31,7 +32,7 @@ const UrlShortener = () => {
     };
 
     return (
-        <form onSubmit={onSubmit}>
+        <Form onSubmit={onSubmit}>
             <label htmlFor="longUrl">
                 Long URL
                 <input id="longUrl" value={userInput} onChange={onChange} />
@@ -46,7 +47,7 @@ const UrlShortener = () => {
                     please try again.
                 </span>
             )}
-        </form>
+        </Form>
     );
 };
 
