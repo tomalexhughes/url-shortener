@@ -22,8 +22,8 @@ const GlobalStyle = createGlobalStyle`
         padding: 0;
         background: url(${Background});
         background-repeat: no-repeat;
-        background-size: cover;
         background-position-x: right;
+        background-size: cover;
     }
 `;
 
