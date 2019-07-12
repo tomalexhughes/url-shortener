@@ -67,4 +67,25 @@ describe('UrlShortener', () => {
         });
         expect(queryByText('please try again', { exact: false })).toBeNull();
     });
+
+    it('should clear the error on submission', async () => {
+        const link = 'http://bit.ly/32fE6xW';
+
+        nock('https://api-ssl.bitly.com')
+            .post('/v4/shorten')
+            .reply(400, {});
+        const { getByText, queryByText } = render(<UrlShortener />);
+        const submitButton = getByText('Submit');
+        fireEvent.click(submitButton);
+        await waitForElement(() =>
+            queryByText('please try again', { exact: false })
+        );
+
+        nock('https://api-ssl.bitly.com')
+            .post('/v4/shorten')
+            .reply(200, { link });
+        fireEvent.click(submitButton);
+        await waitForElement(() => queryByText(link));
+        expect(queryByText('please try again', { exact: false })).toBeNull();
+    });
 });
