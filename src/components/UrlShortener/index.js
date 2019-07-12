@@ -6,7 +6,6 @@ import Heading1 from '../_styles/Heading1';
 import Heading2 from '../_styles/Heading2';
 import ColoredLink from '../_styles/ColoredLink';
 import Button from '../_styles/Button';
-import Heading3 from '../_styles/Heading3';
 
 const UrlShortener = () => {
     const [userInput, updateUserInput] = useState('');
@@ -76,11 +75,11 @@ const UrlShortener = () => {
     return (
         <>
             <Heading1>Your shortened URL is...</Heading1>
-            <Heading3 as="h2">
+            <Heading2>
                 <ColoredLink href={shortenedUrl} color="white">
                     {shortenedUrl}
                 </ColoredLink>
-            </Heading3>
+            </Heading2>
             <Button onClick={reset}>Reset</Button>
         </>
     );
