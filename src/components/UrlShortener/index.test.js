@@ -96,4 +96,28 @@ describe('UrlShortener', () => {
         await waitForElement(() => queryByText(link));
         expect(queryByText('please try again', { exact: false })).toBeNull();
     });
+
+    it('should show a reset button after receiving a shortened link', async () => {
+        nock('https://api-ssl.bitly.com')
+            .post('/v4/shorten')
+            .reply(200, { link: 'foobar' });
+        const { getByText, queryByText } = render(<UrlShortener />);
+        const submitButton = getByText('Submit');
+        fireEvent.click(submitButton);
+        await waitForElement(() => queryByText('Reset'));
+    });
+
+    it('should show the form after pressing the reset button', async () => {
+        nock('https://api-ssl.bitly.com')
+            .post('/v4/shorten')
+            .reply(200, { link: 'foobar' });
+        const { getByText, queryByText, queryByLabelText } = render(
+            <UrlShortener />
+        );
+        const submitButton = getByText('Submit');
+        fireEvent.click(submitButton);
+        await waitForElement(() => queryByText('Reset'));
+        fireEvent.click(getByText('Reset'));
+        expect(queryByLabelText('Long URL')).not.toBeNull();
+    });
 });
