@@ -6,6 +6,7 @@ import Heading1 from '../_styles/Heading1';
 import Heading2 from '../_styles/Heading2';
 import ColoredLink from '../_styles/ColoredLink';
 import Button from '../_styles/Button';
+import Loader from '../_styles/Loader';
 
 const GENERIC_ERROR_MESSAGE = `We're sorry! It looks like we experienced an
                             error, please try again.`;
@@ -14,6 +15,7 @@ const UrlShortener = () => {
     const [userInput, updateUserInput] = useState('');
     const [shortenedUrl, updateShortenedUrl] = useState(null);
     const [errorMessage, setError] = useState(null);
+    const [isSending, setIsSending] = useState(false);
 
     const reset = () => {
         updateShortenedUrl(null);
@@ -44,13 +46,16 @@ const UrlShortener = () => {
         if (!isValid) return;
 
         try {
+            setIsSending(true);
             const { link } = await apiRequest({
                 endpoint: '/shorten',
                 method: 'POST',
                 payload: { long_url: userInput.trim() }
             });
+            setIsSending(false);
             updateShortenedUrl(link);
         } catch (error) {
+            setIsSending(false);
             setError((error && error.description) || GENERIC_ERROR_MESSAGE);
         }
     };
@@ -75,7 +80,7 @@ const UrlShortener = () => {
                         <ErrorMessage>{errorMessage}</ErrorMessage>
                     )}
                     <Button type="submit" onClick={onSubmit}>
-                        Submit
+                        {isSending ? <Loader /> : 'Submit'}
                     </Button>
                 </Form>
             </>
