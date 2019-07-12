@@ -22,12 +22,8 @@ const GlobalStyle = createGlobalStyle`
         padding: 0;
         background: url(${Background});
         background-repeat: no-repeat;
-        background-position: left center;
-        background-size: 532px 100%;
-
-        @media screen and (min-width: 760px) {
-            background-size: 70% 100%;
-        }
+        background-size: cover;
+        background-position-x: right;
     }
 `;
 

@@ -1,17 +1,16 @@
 import styled from 'styled-components';
 
 const Container = styled.div`
-    width: 25rem;
+    max-width: 320px;
+    width: 100vw;
     height: 100vh;
     margin: 0;
-    padding: 10% 0 0 10%;
+    padding: 200px 2rem 0;
 
-    @media screen and (min-width: 480px) {
-        width: 44rem;
-    }
-
-    @media screen and (min-width: 960px) {
-        padding: 14rem 0 0 14rem;
+    @media screen and (min-width: 768px) {
+        max-width: initial;
+        width: 50%;
+        padding: 10% 0 0 10%;
     }
 `;
 
