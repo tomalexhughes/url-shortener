@@ -5,6 +5,14 @@ import UrlShortener from '.';
 import * as apiRequest from '../../utils/apiRequest';
 
 describe('UrlShortener', () => {
+    /**
+     * Mocks restored on a per suite basis
+     * As Create-React-App does not allow global restoreMocks option
+     */
+    afterEach(() => {
+        jest.restoreAllMocks();
+    });
+
     it('has an input field', () => {
         const { queryByLabelText } = render(<UrlShortener />);
         const input = queryByLabelText('Long URL');
