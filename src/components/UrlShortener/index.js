@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import apiRequest from '../../utils/apiRequest';
 import Form from '../_styles/Form';
+import ErrorMessage from '../_styles/ErrorMessage';
 
 const UrlShortener = () => {
     const [userInput, updateUserInput] = useState('');
@@ -42,16 +43,16 @@ const UrlShortener = () => {
                     placeholder="https://example.com"
                 />
             </label>
+            {isError && (
+                <ErrorMessage>
+                    We&apos;re sorry! It looks like we experienced an error,
+                    please try again.
+                </ErrorMessage>
+            )}
             <button type="submit" onClick={onSubmit}>
                 Submit
             </button>
             {shortenedUrl && shortenedUrl}
-            {isError && (
-                <span>
-                    We&apos;re sorry! It looks like we experienced an error,
-                    please try again.
-                </span>
-            )}
         </Form>
     );
 };
