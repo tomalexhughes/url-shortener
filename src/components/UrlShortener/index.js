@@ -7,24 +7,27 @@ import Heading2 from '../_styles/Heading2';
 import ColoredLink from '../_styles/ColoredLink';
 import Button from '../_styles/Button';
 
+const GENERIC_ERROR_MESSAGE = `We're sorry! It looks like we experienced an
+                            error, please try again.`;
+
 const UrlShortener = () => {
     const [userInput, updateUserInput] = useState('');
     const [shortenedUrl, updateShortenedUrl] = useState(null);
-    const [isError, setIsError] = useState(false);
+    const [errorMessage, setError] = useState(null);
 
     const reset = () => {
         updateShortenedUrl(null);
         updateUserInput('');
-        setIsError(false);
+        setError(null);
     };
 
     const onChange = ({ target: { value } }) => {
-        setIsError(false);
+        setError(null);
         updateUserInput(value);
     };
 
     const onSubmit = async (e) => {
-        setIsError(false);
+        setError(null);
         e.preventDefault();
         try {
             const { link } = await apiRequest({
@@ -33,12 +36,8 @@ const UrlShortener = () => {
                 payload: { long_url: userInput }
             });
             updateShortenedUrl(link);
-        } catch {
-            /**
-             * Optional catch binding
-             * Would likely catch error and report to error tracker for production app
-             */
-            setIsError(true);
+        } catch (error) {
+            setError((error && error.description) || GENERIC_ERROR_MESSAGE);
         }
     };
 
@@ -58,11 +57,8 @@ const UrlShortener = () => {
                             placeholder="https://example.com"
                         />
                     </label>
-                    {isError && (
-                        <ErrorMessage>
-                            We&apos;re sorry! It looks like we experienced an
-                            error, please try again.
-                        </ErrorMessage>
+                    {errorMessage && (
+                        <ErrorMessage>{errorMessage}</ErrorMessage>
                     )}
                     <Button type="submit" onClick={onSubmit}>
                         Submit

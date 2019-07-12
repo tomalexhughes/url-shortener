@@ -120,4 +120,15 @@ describe('UrlShortener', () => {
         fireEvent.click(getByText('Reset'));
         expect(queryByLabelText('Long URL')).not.toBeNull();
     });
+
+    it('should show the error desription returned via the API', async () => {
+        const description = 'an error message';
+        nock('https://api-ssl.bitly.com')
+            .post('/v4/shorten')
+            .reply(400, { description });
+        const { getByText, queryByText } = render(<UrlShortener />);
+        const submitButton = getByText('Submit');
+        fireEvent.click(submitButton);
+        await waitForElement(() => queryByText(description));
+    });
 });
