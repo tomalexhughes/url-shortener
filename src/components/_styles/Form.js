@@ -19,6 +19,10 @@ const Form = styled.form`
         background: rgba(255, 255, 255, 0.2);
         border: none;
         border-radius: 4px;
+
+        &::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
     }
 
     button {

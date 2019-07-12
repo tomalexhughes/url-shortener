@@ -35,7 +35,12 @@ const UrlShortener = () => {
         <Form onSubmit={onSubmit}>
             <label htmlFor="longUrl">
                 Long URL
-                <input id="longUrl" value={userInput} onChange={onChange} />
+                <input
+                    id="longUrl"
+                    value={userInput}
+                    onChange={onChange}
+                    placeholder="https://example.com"
+                />
             </label>
             <button type="submit" onClick={onSubmit}>
                 Submit
