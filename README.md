@@ -10,6 +10,13 @@ To prevent implementing full OAuth authentication, API requests are verified wit
 
 This application makes use of some of the latest ESNext features, as it stands currently not all polyfills have been used and therefore support is not guaranteed outside of the 'evergreen' browsers.
 
+## Environment Variables
+
+The following environment variables are required by the project:
+
+* REACT_APP_BITLY_URL (https://api-ssl.bitly.com/v4/)
+* REACT_APP_BITLY_GENERIC_TOKEN
+
 # create-react-app
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
