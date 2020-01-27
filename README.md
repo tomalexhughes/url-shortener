@@ -1,6 +1,6 @@
-# HouseSimple Interview Task
+# URL Shortener
 
-This repository contains code for the HouseSimple URL shortening task.
+This repository contains code for a URL shortener as part of an interview task.
 
 ## Authentication
 
