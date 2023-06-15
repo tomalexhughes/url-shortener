@@ -16,7 +16,7 @@ describe('UrlShortener', () => {
     }
 
     function submitForm() {
-        fireEvent.click(screen.getByText('Submit'));
+        fireEvent.click(screen.getByRole('button', { name: 'Submit' }));
     }
 
     async function waitForLoading() {
@@ -33,14 +33,16 @@ describe('UrlShortener', () => {
 
     it('has an input field', () => {
         render(<UrlShortener />);
-        const input = screen.queryByLabelText('Long URL');
-        expect(input).not.toBeNull();
+        const input = screen.getByLabelText('Long URL');
+        expect(input).toBeInTheDocument();
         expect(input).toBeInstanceOf(HTMLInputElement);
     });
 
     it('has a submit button', () => {
         render(<UrlShortener />);
-        expect(screen.queryByText('Submit')).not.toBeNull();
+        expect(
+            screen.getByRole('button', { name: 'Submit' })
+        ).toBeInTheDocument();
     });
 
     it('shows the shortened URL on submission', async () => {
@@ -91,7 +93,7 @@ describe('UrlShortener', () => {
         fillField('aNewValue');
         expect(
             screen.queryByText('please try again', { exact: false })
-        ).toBeNull();
+        ).not.toBeInTheDocument();
     });
 
     it('should clear the error on submission', async () => {
@@ -114,7 +116,7 @@ describe('UrlShortener', () => {
         expect(await screen.findByText(link)).toBeInTheDocument();
         expect(
             screen.queryByText('please try again', { exact: false })
-        ).toBeNull();
+        ).not.toBeInTheDocument();
     });
 
     it('should show a reset button after receiving a shortened link', async () => {
@@ -124,7 +126,9 @@ describe('UrlShortener', () => {
         render(<UrlShortener />);
         fillField();
         submitForm();
-        expect(await screen.findByText('Reset')).toBeInTheDocument();
+        expect(
+            await screen.findByRole('button', { name: 'Reset' })
+        ).toBeInTheDocument();
     });
 
     it('should show the form after pressing the reset button', async () => {
@@ -134,9 +138,8 @@ describe('UrlShortener', () => {
         render(<UrlShortener />);
         fillField();
         submitForm();
-        expect(await screen.findByText('Reset')).toBeInTheDocument();
-        fireEvent.click(screen.getByText('Reset'));
-        expect(screen.queryByLabelText('Long URL')).not.toBeNull();
+        fireEvent.click(await screen.findByRole('button', { name: 'Reset' }));
+        expect(screen.getByLabelText('Long URL')).toBeInTheDocument();
     });
 
     it('should show the error description returned via the API', async () => {
@@ -164,6 +167,6 @@ describe('UrlShortener', () => {
     it('should show an error if the user attempts to send an empty string', () => {
         render(<UrlShortener />);
         submitForm();
-        expect(screen.queryByText('URL cannot be empty.')).not.toBeNull();
+        expect(screen.getByText('URL cannot be empty.')).toBeInTheDocument();
     });
 });
