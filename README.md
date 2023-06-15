@@ -1,6 +1,12 @@
-# URL Shortener
-
-This repository contains code for a URL shortener as part of an interview task.
+<div align="center">
+    <h1>URL Shortener</h1>
+    <p>This repository contains code for a URL shortener as part of an interview task.</p>
+    <br />
+    <img
+      alt=""
+      src="/app.png"
+    />
+</div>
 
 ## Authentication
 
