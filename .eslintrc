@@ -27,7 +27,7 @@
             }
         ],
         "react/jsx-filename-extension": [
-            1,
+            "warn",
             {
                 "extensions": [
                     ".js",
