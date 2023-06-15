@@ -33,3 +33,12 @@ NOTE: This app has been tested with Node.js 18. This is the LTS at the time of w
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 The list of available scripts can be found in the `package.json` file.
+
+## Tests
+
+Tests are implemented with Jest, Testing Library, and Nock. This allows us to create tests that closely resemble how a user would interact with the real application in the browser, without the overheads of E2E tests.
+
+In the future I would like to replace Nock with [Mock Service Worker](https://mswjs.io/). This would allow:
+
+* Testing in the browser with mock requests
+* Replace `node-fetch` with the native Fetch API (which Nock does not currently support)
