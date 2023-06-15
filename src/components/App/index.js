@@ -1,9 +1,9 @@
 import React from 'react';
 import { ThemeProvider } from 'styled-components';
 import UrlShortener from '../UrlShortener';
-import GlobalStyle from '../_styles/GlobalStyle';
-import Container from '../_styles/Container';
-import Footer from '../_styles/Footer';
+import GlobalStyle from '../../ui/GlobalStyle';
+import Container from '../../ui/Container';
+import Footer from '../../ui/Footer';
 
 const theme = {
     primary: '#4354cb'

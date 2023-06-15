@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import WarningTriangle from '../../images/WarningTriangle.svg';
+import WarningTriangle from '../images/WarningTriangle.svg';
 
 const ErrorMessage = styled.div`
     position: relative;

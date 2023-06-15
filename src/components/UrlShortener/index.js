@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import apiRequest from '../../utils/apiRequest';
-import Form from '../_styles/Form';
-import ErrorMessage from '../_styles/ErrorMessage';
-import Heading1 from '../_styles/Heading1';
-import Heading2 from '../_styles/Heading2';
-import ColoredLink from '../_styles/ColoredLink';
-import Button from '../_styles/Button';
-import Loader from '../_styles/Loader';
+import Form from '../../ui/Form';
+import ErrorMessage from '../../ui/ErrorMessage';
+import Heading1 from '../../ui/Heading1';
+import Heading2 from '../../ui/Heading2';
+import ColoredLink from '../../ui/ColoredLink';
+import Button from '../../ui/Button';
+import Loader from '../../ui/Loader';
 
 const GENERIC_ERROR_MESSAGE = `We're sorry! It looks like we experienced an
                             error, please try again.`;
