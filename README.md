@@ -18,7 +18,7 @@ This application makes use of some of the latest ESNext features, as it stands c
 
 ## Environment Variables
 
-The following environment variables are required by the project:
+The following environment variables are required for the application to work:
 
 * REACT_APP_BITLY_URL (https://api-ssl.bitly.com/v4/)
 * REACT_APP_BITLY_GENERIC_TOKEN
@@ -27,7 +27,7 @@ The following environment variables are required by the project:
 
 To run the application:
 
-1. Create a `.env` file - using `.env.example` as a template, and provide your API access token.
+1. Create a `.env.local` file and set `REACT_APP_BITLY_GENERIC_TOKEN` to your token.
 2. Run `npm install` to install the required dependencies.
 3. Run `npm start` to start the application in development mode.
 4. Visit [http://localhost:3000](http://localhost:3000) to view the app in your browser.
