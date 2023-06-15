@@ -15,14 +15,6 @@ describe('UrlShortener', () => {
         return userEvent.click(screen.getByRole('button', { name: 'Submit' }));
     }
 
-    /**
-     * Mocks restored on a per suite basis
-     * As Create-React-App does not allow global restoreMocks option
-     */
-    afterEach(() => {
-        jest.restoreAllMocks();
-    });
-
     it('has an input field', () => {
         render(<UrlShortener />);
         const input = screen.getByLabelText('Long URL');

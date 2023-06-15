@@ -58,6 +58,9 @@
     "stylelint-config-styled-components": "^0.1.1",
     "stylelint-order": "^6.0.0"
   },
+  "jest": {
+    "restoreMocks": true
+  },
   "lint-staged": {
     "*.{js,jsx}":[
       "npm run lint -- --fix --max-warnings 0",
