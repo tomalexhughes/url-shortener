@@ -3,7 +3,9 @@ import {
     render,
     fireEvent,
     getByLabelText,
-    getByText
+    getByText,
+    waitForElementToBeRemoved,
+    queryByTestId
 } from '@testing-library/react';
 import nock from 'nock';
 import UrlShortener from '.';
@@ -17,6 +19,12 @@ describe('UrlShortener', () => {
 
     function submitForm(container) {
         fireEvent.click(getByText(container, 'Submit'));
+    }
+
+    async function waitForLoading(container) {
+        return waitForElementToBeRemoved(() =>
+            queryByTestId(container, 'loader')
+        );
     }
 
     /**
@@ -50,7 +58,7 @@ describe('UrlShortener', () => {
         expect(await findByText(link)).toBeInTheDocument();
     });
 
-    it('should submit the URL inputted by the user', () => {
+    it('should submit the URL inputted by the user', async () => {
         const apiRequestSpy = jest
             .spyOn(apiRequest, 'default')
             .mockImplementation(() => null);
@@ -58,6 +66,7 @@ describe('UrlShortener', () => {
         const { container } = render(<UrlShortener />);
         fillField(container, value);
         submitForm(container);
+        await waitForLoading(container);
         expect(apiRequestSpy.mock.calls[0][0].payload.long_url).toEqual(value);
     });
 
@@ -143,13 +152,14 @@ describe('UrlShortener', () => {
         expect(await findByText(description)).toBeInTheDocument();
     });
 
-    it('should send a trimmed string', () => {
+    it('should send a trimmed string', async () => {
         const apiRequestSpy = jest
             .spyOn(apiRequest, 'default')
             .mockImplementation(() => null);
         const { container } = render(<UrlShortener />);
         fillField(container, 'abc   ');
         submitForm(container);
+        await waitForLoading(container);
         expect(apiRequestSpy.mock.calls[0][0].payload.long_url).toEqual('abc');
     });
 

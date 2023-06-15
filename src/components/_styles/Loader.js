@@ -37,7 +37,7 @@ const Loader = styled.span`
 `;
 
 export default () => (
-    <Loader>
+    <Loader data-testid="loader">
         <div />
         <div />
         <div />
