@@ -17,6 +17,7 @@ if [[ $rc != 0 ]]; then
 fi
 
 # Prevents push if tests fail
+# TODO: Move this to CI/CD and protect merges to master until passing
 CI=true npm run test
 rc=$?
 if [[ $rc != 0 ]]; then
