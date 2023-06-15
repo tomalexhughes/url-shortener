@@ -1,30 +1,26 @@
 import React from 'react';
 import {
     render,
+    screen,
     fireEvent,
-    getByLabelText,
-    getByText,
-    waitForElementToBeRemoved,
-    queryByTestId
+    waitForElementToBeRemoved
 } from '@testing-library/react';
 import nock from 'nock';
 import UrlShortener from '.';
 import * as apiRequest from '../../utils/apiRequest';
 
 describe('UrlShortener', () => {
-    function fillField(container, value = 'http://example.com') {
-        const field = getByLabelText(container, 'Long URL');
+    function fillField(value = 'http://example.com') {
+        const field = screen.getByLabelText('Long URL');
         fireEvent.change(field, { target: { value } });
     }
 
-    function submitForm(container) {
-        fireEvent.click(getByText(container, 'Submit'));
+    function submitForm() {
+        fireEvent.click(screen.getByText('Submit'));
     }
 
-    async function waitForLoading(container) {
-        return waitForElementToBeRemoved(() =>
-            queryByTestId(container, 'loader')
-        );
+    async function waitForLoading() {
+        return waitForElementToBeRemoved(() => screen.queryByTestId('loader'));
     }
 
     /**
@@ -36,15 +32,15 @@ describe('UrlShortener', () => {
     });
 
     it('has an input field', () => {
-        const { queryByLabelText } = render(<UrlShortener />);
-        const input = queryByLabelText('Long URL');
+        render(<UrlShortener />);
+        const input = screen.queryByLabelText('Long URL');
         expect(input).not.toBeNull();
         expect(input).toBeInstanceOf(HTMLInputElement);
     });
 
     it('has a submit button', () => {
-        const { queryByText } = render(<UrlShortener />);
-        expect(queryByText('Submit')).not.toBeNull();
+        render(<UrlShortener />);
+        expect(screen.queryByText('Submit')).not.toBeNull();
     });
 
     it('shows the shortened URL on submission', async () => {
@@ -52,10 +48,10 @@ describe('UrlShortener', () => {
         nock('https://api-ssl.bitly.com')
             .post('/v4/shorten')
             .reply(200, { link });
-        const { container, findByText } = render(<UrlShortener />);
-        fillField(container);
-        submitForm(container);
-        expect(await findByText(link)).toBeInTheDocument();
+        render(<UrlShortener />);
+        fillField();
+        submitForm();
+        expect(await screen.findByText(link)).toBeInTheDocument();
     });
 
     it('should submit the URL inputted by the user', async () => {
@@ -63,10 +59,10 @@ describe('UrlShortener', () => {
             .spyOn(apiRequest, 'default')
             .mockImplementation(() => null);
         const value = 'aTestURL';
-        const { container } = render(<UrlShortener />);
-        fillField(container, value);
-        submitForm(container);
-        await waitForLoading(container);
+        render(<UrlShortener />);
+        fillField(value);
+        submitForm();
+        await waitForLoading();
         expect(apiRequestSpy.mock.calls[0][0].payload.long_url).toEqual(value);
     });
 
@@ -74,11 +70,11 @@ describe('UrlShortener', () => {
         nock('https://api-ssl.bitly.com')
             .post('/v4/shorten')
             .reply(400, {});
-        const { container, findByText } = render(<UrlShortener />);
-        fillField(container);
-        submitForm(container);
+        render(<UrlShortener />);
+        fillField();
+        submitForm();
         expect(
-            await findByText('please try again', { exact: false })
+            await screen.findByText('please try again', { exact: false })
         ).toBeInTheDocument();
     });
 
@@ -86,14 +82,16 @@ describe('UrlShortener', () => {
         jest.spyOn(apiRequest, 'default').mockImplementation(() =>
             Promise.reject()
         );
-        const { container, findByText, queryByText } = render(<UrlShortener />);
-        fillField(container);
-        submitForm(container);
+        render(<UrlShortener />);
+        fillField();
+        submitForm();
         expect(
-            await findByText('please try again', { exact: false })
+            await screen.findByText('please try again', { exact: false })
         ).toBeInTheDocument();
-        fillField(container, 'aNewValue');
-        expect(queryByText('please try again', { exact: false })).toBeNull();
+        fillField('aNewValue');
+        expect(
+            screen.queryByText('please try again', { exact: false })
+        ).toBeNull();
     });
 
     it('should clear the error on submission', async () => {
@@ -102,43 +100,43 @@ describe('UrlShortener', () => {
         nock('https://api-ssl.bitly.com')
             .post('/v4/shorten')
             .reply(400, {});
-        const { container, findByText, queryByText } = render(<UrlShortener />);
-        fillField(container);
-        submitForm(container);
+        render(<UrlShortener />);
+        fillField();
+        submitForm();
         expect(
-            await findByText('please try again', { exact: false })
+            await screen.findByText('please try again', { exact: false })
         ).toBeInTheDocument();
 
         nock('https://api-ssl.bitly.com')
             .post('/v4/shorten')
             .reply(200, { link });
-        submitForm(container);
-        expect(await findByText(link)).toBeInTheDocument();
-        expect(queryByText('please try again', { exact: false })).toBeNull();
+        submitForm();
+        expect(await screen.findByText(link)).toBeInTheDocument();
+        expect(
+            screen.queryByText('please try again', { exact: false })
+        ).toBeNull();
     });
 
     it('should show a reset button after receiving a shortened link', async () => {
         nock('https://api-ssl.bitly.com')
             .post('/v4/shorten')
             .reply(200, { link: 'foobar' });
-        const { container, findByText } = render(<UrlShortener />);
-        fillField(container);
-        submitForm(container);
-        expect(await findByText('Reset')).toBeInTheDocument();
+        render(<UrlShortener />);
+        fillField();
+        submitForm();
+        expect(await screen.findByText('Reset')).toBeInTheDocument();
     });
 
     it('should show the form after pressing the reset button', async () => {
         nock('https://api-ssl.bitly.com')
             .post('/v4/shorten')
             .reply(200, { link: 'foobar' });
-        const { container, findByText, queryByLabelText } = render(
-            <UrlShortener />
-        );
-        fillField(container);
-        submitForm(container);
-        expect(await findByText('Reset')).toBeInTheDocument();
-        fireEvent.click(getByText(container, 'Reset'));
-        expect(queryByLabelText('Long URL')).not.toBeNull();
+        render(<UrlShortener />);
+        fillField();
+        submitForm();
+        expect(await screen.findByText('Reset')).toBeInTheDocument();
+        fireEvent.click(screen.getByText('Reset'));
+        expect(screen.queryByLabelText('Long URL')).not.toBeNull();
     });
 
     it('should show the error description returned via the API', async () => {
@@ -146,26 +144,26 @@ describe('UrlShortener', () => {
         nock('https://api-ssl.bitly.com')
             .post('/v4/shorten')
             .reply(400, { description });
-        const { container, findByText } = render(<UrlShortener />);
-        fillField(container);
-        submitForm(container);
-        expect(await findByText(description)).toBeInTheDocument();
+        render(<UrlShortener />);
+        fillField();
+        submitForm();
+        expect(await screen.findByText(description)).toBeInTheDocument();
     });
 
     it('should send a trimmed string', async () => {
         const apiRequestSpy = jest
             .spyOn(apiRequest, 'default')
             .mockImplementation(() => null);
-        const { container } = render(<UrlShortener />);
-        fillField(container, 'abc   ');
-        submitForm(container);
-        await waitForLoading(container);
+        render(<UrlShortener />);
+        fillField('abc   ');
+        submitForm();
+        await waitForLoading();
         expect(apiRequestSpy.mock.calls[0][0].payload.long_url).toEqual('abc');
     });
 
     it('should show an error if the user attempts to send an empty string', () => {
-        const { container, queryByText } = render(<UrlShortener />);
-        submitForm(container);
-        expect(queryByText('URL cannot be empty.')).not.toBeNull();
+        render(<UrlShortener />);
+        submitForm();
+        expect(screen.queryByText('URL cannot be empty.')).not.toBeNull();
     });
 });
