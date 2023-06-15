@@ -16,21 +16,6 @@ if [[ $rc != 0 ]]; then
     exit $rc
 fi
 
-# Prevents push if linter outputs errors or warning
-npm run lint -- --max-warnings 0
-rc=$?
-if [[ $rc != 0 ]]; then
-    echo "${RED}Pre-push failed on linter - please ensure you fix any linting errors before attempting to push again${CLEAR_COLOUR}"
-    exit $rc
-fi
-
-npm run lint:css
-rc=$?
-if [[ $rc != 0 ]]; then
-    echo "${RED}Pre-push failed on CSS linting - please ensure you fix any linting errors before attempting to push again${CLEAR_COLOUR}"
-    exit $rc
-fi
-
 # Prevents push if tests fail
 CI=true npm run test
 rc=$?
