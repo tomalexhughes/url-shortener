@@ -18,7 +18,8 @@ const App = () => (
                     <UrlShortener />
                 </Container>
                 <Footer>
-                    Created by <a href="http://tomalexhughes.com">Tom Hughes</a>
+                    Created by{' '}
+                    <a href={process.env.REACT_APP_PERSONAL_SITE}>Tom Hughes</a>
                 </Footer>
             </>
         </ThemeProvider>
