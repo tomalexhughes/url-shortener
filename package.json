@@ -48,7 +48,7 @@
     "eslint-plugin-react": "^7.14.2",
     "husky": "^8.0.0",
     "lint-staged": "^13.2.2",
-    "nock": "^10.0.6",
+    "nock": "^13.3.0",
     "node-fetch": "^2.6.0",
     "postcss-styled-syntax": "^0.4.0",
     "prettier": "^1.18.2",
