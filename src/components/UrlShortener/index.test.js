@@ -2,9 +2,8 @@ import React from 'react';
 import {
     render,
     screen,
-    fireEvent,
-    waitForElementToBeRemoved
 } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import nock from 'nock';
 import UrlShortener from '.';
 import * as apiRequest from '../../utils/apiRequest';
@@ -12,15 +11,11 @@ import * as apiRequest from '../../utils/apiRequest';
 describe('UrlShortener', () => {
     function fillField(value = 'http://example.com') {
         const field = screen.getByLabelText('Long URL');
-        fireEvent.change(field, { target: { value } });
+        return userEvent.type(field, value);
     }
 
     function submitForm() {
-        fireEvent.click(screen.getByRole('button', { name: 'Submit' }));
-    }
-
-    async function waitForLoading() {
-        return waitForElementToBeRemoved(() => screen.queryByTestId('loader'));
+        return userEvent.click(screen.getByRole('button', { name: 'Submit' }));
     }
 
     /**
@@ -51,8 +46,8 @@ describe('UrlShortener', () => {
             .post('/v4/shorten')
             .reply(200, { link });
         render(<UrlShortener />);
-        fillField();
-        submitForm();
+        await fillField();
+        await submitForm();
         expect(await screen.findByText(link)).toBeInTheDocument();
     });
 
@@ -62,9 +57,8 @@ describe('UrlShortener', () => {
             .mockImplementation(() => null);
         const value = 'aTestURL';
         render(<UrlShortener />);
-        fillField(value);
-        submitForm();
-        await waitForLoading();
+        await fillField(value);
+        await submitForm();
         expect(apiRequestSpy.mock.calls[0][0].payload.long_url).toEqual(value);
     });
 
@@ -73,8 +67,8 @@ describe('UrlShortener', () => {
             .post('/v4/shorten')
             .reply(400, {});
         render(<UrlShortener />);
-        fillField();
-        submitForm();
+        await fillField();
+        await submitForm();
         expect(
             await screen.findByText('please try again', { exact: false })
         ).toBeInTheDocument();
@@ -85,12 +79,12 @@ describe('UrlShortener', () => {
             Promise.reject()
         );
         render(<UrlShortener />);
-        fillField();
-        submitForm();
+        await fillField();
+        await submitForm();
         expect(
             await screen.findByText('please try again', { exact: false })
         ).toBeInTheDocument();
-        fillField('aNewValue');
+        await fillField('aNewValue');
         expect(
             screen.queryByText('please try again', { exact: false })
         ).not.toBeInTheDocument();
@@ -103,8 +97,8 @@ describe('UrlShortener', () => {
             .post('/v4/shorten')
             .reply(400, {});
         render(<UrlShortener />);
-        fillField();
-        submitForm();
+        await fillField();
+        await submitForm();
         expect(
             await screen.findByText('please try again', { exact: false })
         ).toBeInTheDocument();
@@ -112,7 +106,7 @@ describe('UrlShortener', () => {
         nock('https://api-ssl.bitly.com')
             .post('/v4/shorten')
             .reply(200, { link });
-        submitForm();
+        await submitForm();
         expect(await screen.findByText(link)).toBeInTheDocument();
         expect(
             screen.queryByText('please try again', { exact: false })
@@ -124,8 +118,8 @@ describe('UrlShortener', () => {
             .post('/v4/shorten')
             .reply(200, { link: 'foobar' });
         render(<UrlShortener />);
-        fillField();
-        submitForm();
+        await fillField();
+        await submitForm();
         expect(
             await screen.findByRole('button', { name: 'Reset' })
         ).toBeInTheDocument();
@@ -136,9 +130,11 @@ describe('UrlShortener', () => {
             .post('/v4/shorten')
             .reply(200, { link: 'foobar' });
         render(<UrlShortener />);
-        fillField();
-        submitForm();
-        fireEvent.click(await screen.findByRole('button', { name: 'Reset' }));
+        await fillField();
+        await submitForm();
+        await userEvent.click(
+            await screen.findByRole('button', { name: 'Reset' })
+        );
         expect(screen.getByLabelText('Long URL')).toBeInTheDocument();
     });
 
@@ -148,8 +144,8 @@ describe('UrlShortener', () => {
             .post('/v4/shorten')
             .reply(400, { description });
         render(<UrlShortener />);
-        fillField();
-        submitForm();
+        await fillField();
+        await submitForm();
         expect(await screen.findByText(description)).toBeInTheDocument();
     });
 
@@ -158,15 +154,14 @@ describe('UrlShortener', () => {
             .spyOn(apiRequest, 'default')
             .mockImplementation(() => null);
         render(<UrlShortener />);
-        fillField('abc   ');
-        submitForm();
-        await waitForLoading();
+        await fillField('abc   ');
+        await submitForm();
         expect(apiRequestSpy.mock.calls[0][0].payload.long_url).toEqual('abc');
     });
 
-    it('should show an error if the user attempts to send an empty string', () => {
+    it('should show an error if the user attempts to send an empty string', async () => {
         render(<UrlShortener />);
-        submitForm();
+        await submitForm();
         expect(screen.getByText('URL cannot be empty.')).toBeInTheDocument();
     });
 });
